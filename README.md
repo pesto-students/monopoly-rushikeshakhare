@@ -6,6 +6,10 @@ When a piece lands on a property that is not owned, the player may use money to 
 
 The game is played until only one remaining player has money and property, with all other players being bankrupt.
 
+# DEPLOYMENT LINK
+
+https://friendly-hamilton-a1e988.netlify.app/
+
 # Instructions
 
 1. Minimum 2 players are required to play the game. Maximum 4 players allowed in a game.
