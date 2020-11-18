@@ -34,12 +34,12 @@ export class GameScreen extends Component {
   };
 
   updateCurrentPlayerCurrentIndex = () => {
+    const currentTurn = this.state.currentTurn;
     const diceValue =
-      this.state.currentTurn.currentIndex +
+      currentTurn.currentIndex +
       this.state.diceValues.one +
       this.state.diceValues.two;
-    this.state.currentTurn.currentIndex =
-      diceValue > 40 ? diceValue - 40 : diceValue;
+    currentTurn.currentIndex = diceValue > 40 ? diceValue - 40 : diceValue;
     this.setState({
       ...this.state,
       refresh: !this.state.refresh,
@@ -50,9 +50,10 @@ export class GameScreen extends Component {
     const isFirstTurnOfEveryPlayer = [...monopolyInstance.Players].every(
       (player) => !player.playerTurn
     );
+    const currentTurn = this.state.currentTurn;
+    const { one, two } = this.state.diceValues;
     if (isFirstTurnOfEveryPlayer) {
-      this.state.currentTurn.lastDiceValue =
-        this.state.diceValues.one + this.state.diceValues.two;
+      currentTurn.lastDiceValue = one + two;
       this.toggleCurrentTurn();
       const isFirstTurnPlayedByEveryOne = [...monopolyInstance.players].every(
         (player) => player.lastDiceValue

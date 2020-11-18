@@ -19,7 +19,7 @@ export const GameBox = (props) => {
   } = props;
   const [playerAction, setPlayerAction] = useState(null);
 
-  const isGo = () => name === "GO";
+  // const isGo = () => name === "GO";
 
   const getPropertyOwner = () => {
     return [...players].find((player) =>
@@ -52,18 +52,6 @@ export const GameBox = (props) => {
       if (allUtilities.length === 2)
         return 10 * diceValues.one * diceValues.two;
     }
-  };
-
-  const isGameYetToStart = () => {
-    const colors = [...players]
-      .filter((player) => !player.playerTurn)
-      .map((player) => player.color);
-
-    if (isGo() && colors.length)
-      return colors.map((color) => (
-        <div style={{ backgroundColor: color }} className="player-box" />
-      ));
-    else return null;
   };
 
   const rentProperty = () => {
@@ -161,106 +149,106 @@ export const GameBox = (props) => {
     return array[Math.floor(Math.random() * array.length)];
   };
 
-  const chanceAction = (action) => {
-    if (
-      action ===
-      "GET OUT OF JAIL FREE. This card may be kept until needed or traded."
-    ) {
-      currentPlayer.getOutOfJailFree += 1;
-      logAndShow("Collected Get out of Jail Free Card");
-    }
-    if (
-      action ===
-      "Make General Repairs on All Your Property. For each house pay $25. For each hotel $100."
-    ) {
-      //Action needed
-      logAndShow(action);
-    }
-    if (action === "Speeding fine $15.") {
-      currentPlayer.balance -= 15;
-      logAndShow(action);
-    }
+  // const chanceAction = (action) => {
+  //   if (
+  //     action ===
+  //     "GET OUT OF JAIL FREE. This card may be kept until needed or traded."
+  //   ) {
+  //     currentPlayer.getOutOfJailFree += 1;
+  //     logAndShow("Collected Get out of Jail Free Card");
+  //   }
+  //   if (
+  //     action ===
+  //     "Make General Repairs on All Your Property. For each house pay $25. For each hotel $100."
+  //   ) {
+  //     //Action needed
+  //     logAndShow(action);
+  //   }
+  //   if (action === "Speeding fine $15.") {
+  //     currentPlayer.balance -= 15;
+  //     logAndShow(action);
+  //   }
 
-    if (
-      action ===
-      "You have been elected chairman of the board. Pay each player $50."
-    ) {
-      [...players].forEach((player) => {
-        player.balance += 50;
-      });
-      currentPlayer.balance -= [...players].length * 50;
-      logAndShow(action);
-    }
+  //   if (
+  //     action ===
+  //     "You have been elected chairman of the board. Pay each player $50."
+  //   ) {
+  //     [...players].forEach((player) => {
+  //       player.balance += 50;
+  //     });
+  //     currentPlayer.balance -= [...players].length * 50;
+  //     logAndShow(action);
+  //   }
 
-    if (action === "Go back three spaces.") {
-      currentPlayer.currentIndex -= 3;
-      logAndShow(action);
-    }
+  //   if (action === "Go back three spaces.") {
+  //     currentPlayer.currentIndex -= 3;
+  //     logAndShow(action);
+  //   }
 
-    if (
-      action ===
-      "ADVANCE TO THE NEAREST UTILITY. IF UNOWNED, you may buy it from the Bank. IF OWNED, throw dice and pay owner a total ten times the amount thrown."
-    ) {
-      const distanceToEletric = 13 - currentPlayer.currentIndex;
-      const distanceToWaterWorks = 29 - currentPlayer.currentIndex;
-      if (distanceToEletric < distanceToWaterWorks) {
-        currentPlayer.currentIndex = 13;
-      } else currentPlayer.currentIndex = 29;
+  //   if (
+  //     action ===
+  //     "ADVANCE TO THE NEAREST UTILITY. IF UNOWNED, you may buy it from the Bank. IF OWNED, throw dice and pay owner a total ten times the amount thrown."
+  //   ) {
+  //     const distanceToEletric = 13 - currentPlayer.currentIndex;
+  //     const distanceToWaterWorks = 29 - currentPlayer.currentIndex;
+  //     if (distanceToEletric < distanceToWaterWorks) {
+  //       currentPlayer.currentIndex = 13;
+  //     } else currentPlayer.currentIndex = 29;
 
-      //action needed
-      logAndShow(action);
-    }
+  //     //action needed
+  //     logAndShow(action);
+  //   }
 
-    if (action === "Bank pays you dividend of $50.") {
-      currentPlayer.balance += 50;
-      logAndShow(action);
-    }
+  //   if (action === "Bank pays you dividend of $50.") {
+  //     currentPlayer.balance += 50;
+  //     logAndShow(action);
+  //   }
 
-    if (
-      action ===
-      "ADVANCE TO THE NEAREST RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay owner twice the rental to which they are otherwise entitled."
-    ) {
-      const mins = [
-        6 - currentPlayer.currentIndex,
-        16 - currentPlayer.currentIndex,
-        26 - currentPlayer.currentIndex,
-      ];
-      const minValue = Math.min(...mins);
-      const index = mins.indexOf(minValue);
-      if (index === 0) currentPlayer.currentIndex = 6;
-      if (index === 1) currentPlayer.currentIndex = 16;
-      if (index === 2) currentPlayer.currentIndex = 26;
-      //action needed
-      logAndShow(action);
-    }
+  //   if (
+  //     action ===
+  //     "ADVANCE TO THE NEAREST RAILROAD. If UNOWNED, you may buy it from the Bank. If OWNED, pay owner twice the rental to which they are otherwise entitled."
+  //   ) {
+  //     const mins = [
+  //       6 - currentPlayer.currentIndex,
+  //       16 - currentPlayer.currentIndex,
+  //       26 - currentPlayer.currentIndex,
+  //     ];
+  //     const minValue = Math.min(...mins);
+  //     const index = mins.indexOf(minValue);
+  //     if (index === 0) currentPlayer.currentIndex = 6;
+  //     if (index === 1) currentPlayer.currentIndex = 16;
+  //     if (index === 2) currentPlayer.currentIndex = 26;
+  //     //action needed
+  //     logAndShow(action);
+  //   }
 
-    if (action === "Pay poor tax of $15.") {
-      currentPlayer.balance -= 15;
-      logAndShow(action);
-    }
+  //   if (action === "Pay poor tax of $15.") {
+  //     currentPlayer.balance -= 15;
+  //     logAndShow(action);
+  //   }
 
-    if (
-      action ===
-      "Take a trip to Reading Rail Road. If you pass 'GO' collect $200."
-    ) {
-      // logic needed
-      currentPlayer.currentIndex = 6;
-      logAndShow(action);
-    }
+  //   if (
+  //     action ===
+  //     "Take a trip to Reading Rail Road. If you pass 'GO' collect $200."
+  //   ) {
+  //     // logic needed
+  //     currentPlayer.currentIndex = 6;
+  //     logAndShow(action);
+  //   }
 
-    if (action === "ADVANCE to Boardwalk.") {
-      currentPlayer.currentIndex = 40;
-      logAndShow(action);
-    }
+  //   if (action === "ADVANCE to Boardwalk.") {
+  //     currentPlayer.currentIndex = 40;
+  //     logAndShow(action);
+  //   }
 
-    if (
-      action === "ADVANCE to Illinois Avenue. If you pass 'GO' collect $200."
-    ) {
-      //logic needed
-      currentPlayer.currentIndex = 40;
-      logAndShow(action);
-    }
-  };
+  //   if (
+  //     action === "ADVANCE to Illinois Avenue. If you pass 'GO' collect $200."
+  //   ) {
+  //     //logic needed
+  //     currentPlayer.currentIndex = 40;
+  //     logAndShow(action);
+  //   }
+  // };
 
   const communityAction = (action) => {
     if (
@@ -412,11 +400,8 @@ export const GameBox = (props) => {
     if (currentPlayer.currentIndex === id) {
       currentPlayer.lastTurnBlockID = id;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(currentPlayer)]);
-
-  useEffect(() => {
-    console.log(monopolyInstance);
-  }, [JSON.stringify(monopolyInstance)]);
 
   return (
     <div className={type}>
