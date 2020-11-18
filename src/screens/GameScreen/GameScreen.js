@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { GameBoardLayout } from "./GameBoardLayout";
 import { monopolyInstance } from "../../models/Monopoly";
-import "./gameBoard.css";
+import { showToast } from "../../utilities";
+import "./gameBoard.scss";
 
 export class GameScreen extends Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export class GameScreen extends Component {
         one: 0,
         two: 0,
       },
+      showLogs: false,
+      gameStatus: true,
     };
   }
 
@@ -35,18 +38,36 @@ export class GameScreen extends Component {
 
   updateCurrentPlayerCurrentIndex = () => {
     const currentTurn = this.state.currentTurn;
-    const diceValue =
+    const playerIndex =
       currentTurn.currentIndex +
       this.state.diceValues.one +
       this.state.diceValues.two;
-    currentTurn.currentIndex = diceValue > 40 ? diceValue - 40 : diceValue;
+    currentTurn.currentIndex =
+      playerIndex > 40 ? playerIndex - 40 : playerIndex;
+    if (playerIndex > 40) {
+      currentTurn.balance += 200;
+      showToast("Passed Go Collect $200");
+      monopolyInstance.logs.push("Passed Go Collect $200");
+    }
     this.setState({
       ...this.state,
       refresh: !this.state.refresh,
     });
   };
 
+  endGameIfOnlyOnePlayerLeft = () => {
+    if ([...monopolyInstance.Players].length === 1) {
+      this.setState({
+        ...this.state,
+        refresh: !this.state.refresh,
+        gameStatus: false,
+      });
+      return;
+    }
+  };
+
   updatePlayerPositions = () => {
+    this.endGameIfOnlyOnePlayerLeft();
     const isFirstTurnOfEveryPlayer = [...monopolyInstance.Players].every(
       (player) => !player.playerTurn
     );
@@ -94,18 +115,44 @@ export class GameScreen extends Component {
     }));
   };
 
+  toggleLogs = () => {
+    this.setState(() => ({ showLogs: !this.state.showLogs }));
+  };
+
+  removePlayerFromGame = (player) => {
+    monopolyInstance.Players = [...monopolyInstance.Players].filter(
+      (gamePlayer) => player !== gamePlayer
+    );
+    if (
+      !monopolyInstance.removedPlayers.find(
+        (removedPlayer) => removedPlayer === player
+      )
+    )
+      monopolyInstance.removedPlayers.push(player);
+    this.endGameIfOnlyOnePlayerLeft();
+    this.setState({
+      ...this.state,
+      refresh: !this.state.refresh,
+    });
+  };
+
   render() {
-    console.log(this.state);
+    const { currentTurn, diceValues, showLogs, gameStatus } = this.state;
+    console.log(monopolyInstance);
 
     return (
       <>
         <div className="responsive">
           <GameBoardLayout
             players={monopolyInstance.Players}
-            currentPlayer={this.state.currentTurn}
-            diceValues={this.state.diceValues}
+            currentPlayer={currentTurn}
+            diceValues={diceValues}
             onDiceRoll={this.rollDice}
             toggleCurrentTurn={this.toggleCurrentTurn}
+            toggleLogs={this.toggleLogs}
+            showLogs={showLogs}
+            removePlayerFromGame={this.removePlayerFromGame}
+            gameStatus={gameStatus}
           />
         </div>
       </>

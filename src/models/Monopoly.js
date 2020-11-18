@@ -9,6 +9,7 @@ class Monopoly {
   logs = [];
   communityCards = communityCards;
   chanceCards = chanceCards;
+  removedPlayers = [];
 
   set Players(newPlayers) {
     this.players = new Cycled(

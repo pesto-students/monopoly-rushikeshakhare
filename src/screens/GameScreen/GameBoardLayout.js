@@ -3,8 +3,23 @@ import data from "../../data/gameBlocks.json";
 import { SQUARE_TYPES } from "../../Constants";
 import { GameBox } from "../../components";
 import { BOX_TYPES } from "../../Constants";
+import die1 from "../../assets/Die_1.png";
+import die2 from "../../assets/Die_2.png";
+import die3 from "../../assets/Die_3.png";
+import die4 from "../../assets/Die_4.png";
+import die5 from "../../assets/Die_5.png";
+import die6 from "../../assets/Die_6.png";
+import { monopolyInstance } from "../../models/Monopoly";
 export const GameBoardLayout = (props) => {
-  const { onDiceRoll, diceValues } = props;
+  const {
+    onDiceRoll,
+    diceValues,
+    toggleLogs,
+    showLogs,
+    gameStatus,
+    currentPlayer,
+  } = props;
+
   const getGameBottomSide = () => data.slice(0, 11).reverse();
 
   const getGameLeftSide = () => [...data.slice(11, 20).reverse()];
@@ -48,6 +63,15 @@ export const GameBoardLayout = (props) => {
         type: BOX_TYPES.AVENUE,
         price,
       };
+  };
+
+  const getDiceImage = (diceValue) => {
+    if (diceValue === 1) return die1;
+    if (diceValue === 2) return die2;
+    if (diceValue === 3) return die3;
+    if (diceValue === 4) return die4;
+    if (diceValue === 5) return die5;
+    if (diceValue === 6) return die6;
   };
 
   return (
@@ -94,13 +118,25 @@ export const GameBoardLayout = (props) => {
           })}
         </div>
         <div className="center-square">
-          <div
-            style={{
-              position: "absolute",
-            }}
-          >
+          <div className="center-square-container">
             <div className="player-balance">
               <b> Balance</b>
+            </div>
+            <div className="dices">
+              {getDiceImage(diceValues.one) && (
+                <img
+                  src={getDiceImage(diceValues.one)}
+                  alt="Dice 1"
+                  className="dice-1"
+                />
+              )}
+              {getDiceImage(diceValues.two) && (
+                <img
+                  src={getDiceImage(diceValues.two)}
+                  alt="Dice 2"
+                  className="dice-2"
+                />
+              )}
             </div>
             {[...props.players].map(({ balance, color, name }, index) => (
               <div className="player-balance">
@@ -115,10 +151,31 @@ export const GameBoardLayout = (props) => {
                 </div>
               </div>
             ))}
-            <button type="button" onClick={onDiceRoll} className="roll-dice-1">
-              Roll
-              <br />
-              {diceValues.one} {diceValues.two}
+            {showLogs && (
+              <div className="logs">
+                <ul>
+                  {monopolyInstance.logs.map((log) => (
+                    <li>{log}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {gameStatus ? (
+              <button
+                type="button"
+                onClick={onDiceRoll}
+                className="roll-dice-1"
+              >
+                Roll Dices
+              </button>
+            ) : (
+              <div className="game-over">
+                Game Over {currentPlayer.name} Wins{" "}
+              </div>
+            )}
+
+            <button type="button" onClick={toggleLogs} className="show-logs">
+              {showLogs ? "Hide" : "Show"} Logs
             </button>
           </div>
         </div>

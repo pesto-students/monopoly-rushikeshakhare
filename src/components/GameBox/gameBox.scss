@@ -1,35 +1,37 @@
 .player-box {
-    width: 2vw;
-    height: 1vh;
+  width: 2vw;
+  height: 1vh;
 }
 
 .owner {
-    width: 2vw;
-    height: 2vh;
-    border-radius: 50%;
-    position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid black;
+  margin: 2px;
+  position: absolute;
 }
 
 .popup-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 9999;
-    margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  margin: auto;
 }
 
 .popup-content {
-    padding: 10px;
-    background-color: white;
-    width: 30%;
-    margin: auto;
-    text-align: center;
-    margin-top: 40vh;
+  padding: 10px;
+  background-color: white;
+  width: 30%;
+  margin: auto;
+  text-align: center;
+  margin-top: 40vh;
 }
 
 .popup-header {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
