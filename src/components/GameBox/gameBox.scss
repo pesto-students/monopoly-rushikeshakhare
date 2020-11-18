@@ -1,0 +1,35 @@
+.player-box {
+    width: 2vw;
+    height: 1vh;
+}
+
+.owner {
+    width: 2vw;
+    height: 2vh;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    margin: auto;
+}
+
+.popup-content {
+    padding: 10px;
+    background-color: white;
+    width: 30%;
+    margin: auto;
+    text-align: center;
+    margin-top: 40vh;
+}
+
+.popup-header {
+    margin-bottom: 10px;
+}

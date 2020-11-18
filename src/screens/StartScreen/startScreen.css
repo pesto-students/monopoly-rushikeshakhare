@@ -1,0 +1,48 @@
+.start-screen {}
+
+.start-screen .game-logo,
+.game-form {
+    width: 40%;
+    margin: auto;
+    margin-top: 5%;
+}
+
+.game-form {
+    width: 60%;
+    text-align: center;
+}
+
+.start-screen .game-logo img {
+    width: 100%;
+}
+
+.input {
+    padding: 10px;
+    background: none;
+    border: 1px solid grey;
+    outline: none;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+button {
+    transition-duration: 100ms;
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #00695c;
+    color: white;
+}
+
+.mar-1 {
+    margin-top: 10px;
+}
+
+.mar-2 {
+    margin-left: 10px;
+}
+
+.field-group {
+    margin-bottom: 10px;
+}
