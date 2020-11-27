@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { BOX_TYPES } from "../../Constants";
+import { BOX_TYPES, COMMUNITY_CARDS, RAILROAD_RENTS } from "../../Constants";
 import { showToast, curry } from "../../utilities";
 import { monopolyInstance } from "../../models/Monopoly";
 import { ActionPopup } from "./ActionPopup";
+import { GoBox, AvenueBox, SpecialBox } from "./BoxTypes";
 import "./gameBox.scss";
 
 export const GameBox = (props) => {
@@ -41,10 +42,10 @@ export const GameBox = (props) => {
       const allRailRoads = currentOwner.ownedProperties.filter(
         (property) => property.type === BOX_TYPES.RAILROADS
       );
-      if (allRailRoads.length === 1) return 25;
-      if (allRailRoads.length === 2) return 50;
-      if (allRailRoads.length === 3) return 100;
-      if (allRailRoads.length === 4) return 200;
+      if (allRailRoads.length === 1) return RAILROAD_RENTS.FIRST;
+      if (allRailRoads.length === 2) return RAILROAD_RENTS.SECOND;
+      if (allRailRoads.length === 3) return RAILROAD_RENTS.THIRD;
+      if (allRailRoads.length === 4) return RAILROAD_RENTS.FOURTH;
     } else if (boxType.type === BOX_TYPES.UTILITIES) {
       const allUtilities = currentOwner.ownedProperties.filter(
         (property) => property.type === BOX_TYPES.UTILITIES
@@ -124,10 +125,10 @@ export const GameBox = (props) => {
   const showPlayerCurrentPosition = () => {
     const colors = [...players]
       .filter((player) => player.currentIndex === id)
-      .map((player) => player.color);
+      .map((player) => player);
 
-    return colors.map((color) => (
-      <div style={{ backgroundColor: color }} className="player-box" />
+    return colors.map(({ color, name }) => (
+      <div style={{ backgroundColor: color }} className="player-box"></div>
     ));
   };
 
@@ -280,85 +281,87 @@ export const GameBox = (props) => {
     const message = `${currentPlayer.name} - ${action}`;
     showToast(message);
     communityLog(message);
-    if (
-      action ===
-      "Get out of Jail, Free. This card may be kept until needed or sold."
-    ) {
-      currentPlayer.getOutOfJailFree += 1;
-    }
 
-    if (
-      action === "You have won second prize in a beauty contest. Collect $10."
-    ) {
-      currentPlayer.balance += 10;
-    }
+    switch (action) {
+      case COMMUNITY_CARDS.GET_OUT_OF_JAIL_FREE: {
+        currentPlayer.getOutOfJailFree += 1;
+        break;
+      }
+      case COMMUNITY_CARDS.SECOND_PRIZE: {
+        currentPlayer.balance += 10;
+        break;
+      }
+      case COMMUNITY_CARDS.SALE_OF_STOCK: {
+        currentPlayer.balance += 50;
+        break;
+      }
+      case COMMUNITY_CARDS.LIFE_INSURANCE: {
+        currentPlayer.balance += 100;
+        break;
+      }
+      case COMMUNITY_CARDS.INCOME_TAX_REFUND: {
+        currentPlayer.balance += 20;
+        break;
+      }
 
-    if (action === "From sale of stock, you get $50.") {
-      currentPlayer.balance += 50;
-    }
+      case COMMUNITY_CARDS.HOLIDAY_FUND_MATURES: {
+        currentPlayer.balance += 100;
+        break;
+      }
+      case COMMUNITY_CARDS.INHERIT: {
+        currentPlayer.balance += 100;
+        break;
+      }
 
-    if (action === "Life insurance matures. Collect $100.") {
-      currentPlayer.balance += 100;
-    }
+      case COMMUNITY_CARDS.CONSULTANCY_FEE: {
+        currentPlayer.balance += 25;
+        break;
+      }
+      case COMMUNITY_CARDS.HOSPITAL_FEE: {
+        currentPlayer.balance -= 100;
+        break;
+      }
+      case COMMUNITY_CARDS.BANK_ERROR: {
+        currentPlayer.balance += 200;
+        break;
+      }
+      case COMMUNITY_CARDS.SCHOOL_FEES: {
+        currentPlayer.balance -= 50;
+        break;
+      }
 
-    if (action === "Income tax refund. Collect $20.") {
-      currentPlayer.balance += 20;
-    }
+      case COMMUNITY_CARDS.DOCTOR_FEES: {
+        currentPlayer.balance -= 50;
+        break;
+      }
 
-    if (action === "Holiday fund matures. Receive $100.") {
-      currentPlayer.balance += 100;
-    }
+      case COMMUNITY_CARDS.BIRTHDAY: {
+        [...players].forEach((player) => {
+          player.balance -= 10;
+        });
+        currentPlayer.balance += [...players].length * 10;
+        break;
+      }
 
-    if (action === "You inherit $100.") {
-      currentPlayer.balance += 100;
-    }
+      case COMMUNITY_CARDS.ADVANCE_TO_GO: {
+        currentPlayer.currentIndex = 1;
+        currentPlayer.balance += 200;
+        break;
+      }
 
-    if (action === "Receive $25 consultancy fee.") {
-      currentPlayer.balance += 25;
-    }
+      case COMMUNITY_CARDS.GO_TO_JAIL: {
+        currentPlayer.currentIndex = 11;
+        currentPlayer.isInJail = 1;
+        break;
+      }
 
-    if (action === "Pay hospital fees of $100.") {
-      currentPlayer.balance -= 100;
-    }
-
-    if (action === "Bank error in your favor. Collect $200.") {
-      currentPlayer.balance += 200;
-    }
-
-    if (action === "Pay school fees of $50.") {
-      currentPlayer.balance -= 50;
-    }
-
-    if (action === "Doctor's fee. Pay $50.") {
-      currentPlayer.balance -= 50;
-    }
-
-    if (action === "It is your birthday. Collect $10 from every player.") {
-      [...players].forEach((player) => {
-        player.balance -= 10;
-      });
-      currentPlayer.balance += [...players].length * 10;
-    }
-
-    if (action === "Advance to 'GO' (Collect $200)") {
-      currentPlayer.currentIndex = 1;
-      currentPlayer.balance += 200;
-    }
-
-    if (
-      action ===
-      "Go to Jail. Go directly to Jail. Do not pass 'GO'. Do not collect $200."
-    ) {
-      currentPlayer.currentIndex = 11;
-      currentPlayer.isInJail = 1;
-    }
-    if (
-      action ===
-      "You are assessed for street repairs. $40 per house. $115 per hotel."
-    ) {
-      const toPay = currentPlayer.ownedProperties.length * 40;
-      currentPlayer.balance -= toPay;
-      toggleCurrentTurn();
+      case COMMUNITY_CARDS.STREET_REPAIRS: {
+        const toPay = currentPlayer.ownedProperties.length * 40;
+        currentPlayer.balance -= toPay;
+        break;
+      }
+      default:
+        return;
     }
   };
 
@@ -458,12 +461,36 @@ export const GameBox = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(currentPlayer)]);
 
+  const getBoxText = () => {
+    if (
+      boxType.type === BOX_TYPES.GO_TO_JAIL ||
+      boxType.type === BOX_TYPES.JAIL ||
+      boxType.type === BOX_TYPES.PARKING ||
+      boxType.type === BOX_TYPES.UTILITIES
+    )
+      return name;
+    else return "";
+  };
+
   return (
     <div className={type}>
-      <div className="firstLine firstLine-bottom">
-        {name} <br /> {id}
+      {boxType.type === BOX_TYPES.GO && <GoBox name={name} />}
+      {boxType.type === BOX_TYPES.AVENUE && <AvenueBox {...props} />}
+      {boxType.type === BOX_TYPES.CHANCE && <SpecialBox type={boxType.type} />}
+      {boxType.type === BOX_TYPES.COMMUNITY && (
+        <SpecialBox type={boxType.type} />
+      )}
+      {boxType.type === BOX_TYPES.RAILROADS && (
+        <SpecialBox {...props} type={boxType.type} />
+      )}
+      {boxType.type === BOX_TYPES.TAX && (
+        <SpecialBox {...props} type={boxType.type} />
+      )}
+      {boxType.type === BOX_TYPES.GO_TO_JAIL}
+      <div className="player-current-position">
         {showPlayerCurrentPosition()}
       </div>
+      <div className="main-box-text">{getBoxText()}</div>
       {getPropertyBoughtColor()}
       {playerAction && <ActionPopup>{getPopupContent()}</ActionPopup>}
     </div>

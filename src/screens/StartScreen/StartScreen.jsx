@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import logo from "../../assets/logo.png";
-import { COLORS } from "../../Constants";
+import { COLORS, GAME_SETTINGS } from "../../Constants";
 import { monopolyInstance } from "../../models/Monopoly";
 import { showToast } from "../../utilities";
-import "./startScreen.css";
+import "./startScreen.scss";
 
 export class StartScreen extends Component {
   state = {
@@ -21,8 +21,9 @@ export class StartScreen extends Component {
     this.setState(() => ({ playerDetails }));
   };
 
-  onPlayerCountInputChange = (event) => {
-    this.setState(() => ({ playerCount: event.target.value }));
+  onPlayerCountInputChange = (playerCount) => {
+    this.setState(() => ({ playerCount }));
+    this.onContinueButtonClick();
   };
 
   onContinueButtonClick = () => {
@@ -78,6 +79,27 @@ export class StartScreen extends Component {
     return fields;
   };
 
+  getNumberOfPlayersInputBoxes = () => {
+    const inputBoxes = [];
+    for (
+      let i = GAME_SETTINGS.MIN_PLAYERS;
+      i <= GAME_SETTINGS.MAX_PLAYERS;
+      i++
+    ) {
+      inputBoxes.push(
+        <div
+          className={`player-count-box ${
+            i === this.state.playerCount ? "active" : ""
+          }`}
+          onClick={() => this.onPlayerCountInputChange(i)}
+        >
+          {i}
+        </div>
+      );
+    }
+    return inputBoxes;
+  };
+
   validateGameSettings = () => {
     if (this.state.playerDetails) {
       if (
@@ -100,31 +122,37 @@ export class StartScreen extends Component {
         <div className="game-form">
           {this.state.countValidated ? (
             <>
-              {this.getPlayerFormFields()}
-              <button
-                type="button"
-                className="input mar-1"
-                onClick={this.validateGameSettings}
-              >
-                Start Game
-              </button>
+              <label htmlFor="PlayerCount">Enter Player Details</label>
+              <div className="player-details-form">
+                {this.getPlayerFormFields()}
+                <button
+                  type="button"
+                  className="input mar-1 active"
+                  onClick={this.validateGameSettings}
+                >
+                  Start Game
+                </button>
+                <button
+                  type="button"
+                  className="input mar-2 danger"
+                  onClick={() =>
+                    this.setState(() => ({ countValidated: false }))
+                  }
+                >
+                  Cancel
+                </button>
+              </div>
             </>
           ) : (
             <>
-              <input
-                type="number"
-                className="input"
-                onChange={this.onPlayerCountInputChange}
-                value={this.state.playerCount}
-              />
-              <br />
-              <button
-                type="button"
-                className="input mar-1"
-                onClick={this.onContinueButtonClick}
-              >
-                Continue
-              </button>
+              <div className="player-count-form">
+                <label htmlFor="PlayerCount" className="player-count-label">
+                  Select Number of Players
+                </label>
+                <div className="input-wrapper">
+                  {this.getNumberOfPlayersInputBoxes()}
+                </div>
+              </div>
             </>
           )}
         </div>

@@ -138,7 +138,6 @@ export class GameScreen extends Component {
 
   render() {
     const { currentTurn, diceValues, showLogs, gameStatus } = this.state;
-    console.log(monopolyInstance);
 
     return (
       <>

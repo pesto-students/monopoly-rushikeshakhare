@@ -74,6 +74,8 @@ export const GameBoardLayout = (props) => {
     if (diceValue === 6) return die6;
   };
 
+  const reversedData = () => data.slice(0, 40).reverse();
+
   return (
     <div className="mainSquare">
       <div className="row top">
